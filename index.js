@@ -7,7 +7,7 @@ const io = new Server(server);
 const axios = require('axios');
 const { XMLParser, XMLBuilder, XMLValidator} = require("fast-xml-parser");
 var lodash = require('lodash');
-
+var config = require("./environment.json");
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -28,7 +28,7 @@ server.listen(3000, () => {
 function makeRequest() {
 
     // Make a request for a user with a given ID
-    axios.get('http://'+process.argv[2]+'/API')
+    axios.get('http://'+config.vmix+'/API')
       .then(function (response) {
 
         const options = {
