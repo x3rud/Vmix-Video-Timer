@@ -44,8 +44,23 @@ function makeRequest() {
         
         //console.log(picked);
 
-        var time = Math.trunc((parseInt(picked[0]['@_duration']) - parseInt(picked[0]['@_position']))/1000);
-
+       if(picked[0].overlay) {
+          if(picked[0].overlay.length > 1) {
+            picked[0].overlay.forEach(element => {
+              var overlay = lodash.filter(jObj.vmix.inputs.input, { '@_key': element["@_key"] } ); 
+              if(overlay[0]["@_type"] == "Video" && overlay[0]["@_state"] == "Running"){
+                picked = overlay;
+              }
+            });
+          }else{
+              var overlay = lodash.filter(jObj.vmix.inputs.input, { '@_key': picked[0].overlay["@_key"] } );
+              picked = overlay;
+            }
+          var time = Math.trunc((parseInt(picked[0]['@_duration']) - parseInt(picked[0]['@_position']))/1000);
+       }else{
+          var time = Math.trunc((parseInt(picked[0]['@_duration']) - parseInt(picked[0]['@_position']))/1000);
+       }
+       
         //console.log(time);
 
         io.emit('timer', { time: time, name: picked[0]['@_title'], number: picked[0]['@_number'], state: picked[0]['@_state'], timeT: parseInt(picked[0]['@_duration'])/1000  });
